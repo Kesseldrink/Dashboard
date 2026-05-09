@@ -10,9 +10,9 @@
             margin: 0;
             padding: 0;
             height: 100vh;
-            background-color: #000000; /* Tiefschwarz spart Strom und verhindert Einbrennen */
+            background-color: #000000;
             color: #ffffff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', sans-serif;
             overflow: hidden; 
         }
 
@@ -26,7 +26,7 @@
         }
 
         .widget {
-            background: rgba(20, 20, 20, 0.8);
+            background: rgba(25, 25, 25, 0.9);
             border: 1px solid rgba(255, 255, 255, 0.05);
             border-radius: 24px;
             padding: 25px;
@@ -35,95 +35,54 @@
             justify-content: center;
             align-items: center;
             text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        /* --- UHR WIDGET --- */
         .widget-time {
             grid-column: 1 / 3; 
             align-items: flex-start; 
-            padding-left: 20px;
             background: none;
             border: none;
-            box-shadow: none;
-            justify-content: flex-start;
         }
 
-        #time {
-            font-size: 110px;
-            font-weight: bold;
-            margin: 0;
-            line-height: 1;
-            letter-spacing: -2px;
-            text-shadow: 0 0 20px rgba(255,255,255,0.1);
-        }
+        #time { font-size: 110px; font-weight: bold; line-height: 1; margin: 0; }
+        #date { font-size: 32px; color: #8b949e; margin-top: 10px; }
 
-        #date {
-            font-size: 32px;
-            color: #8b949e;
-            margin-top: 10px;
-            font-weight: 500;
-        }
+        .widget-weather { grid-column: 3 / 4; font-size: 28px; }
+        #weather-icon { font-size: 70px; margin: 15px 0; }
 
-        /* --- WETTER WIDGET --- */
-        .widget-weather {
-            grid-column: 3 / 4;
-            font-size: 28px;
-        }
-
-        #weather-icon {
-            font-size: 70px;
-            margin: 15px 0;
-            filter: drop-shadow(0 0 15px rgba(255,255,255,0.1));
-        }
-
-        /* --- DAILY QUESTS WIDGET --- */
         .widget-todo {
-            grid-column: 1 / 3;
+            grid-column: 1 / 2; /* Jetzt schmaler an der Seite */
             justify-content: flex-start;
             align-items: flex-start;
         }
 
-        h2 {
-            margin-top: 0;
-            color: #7289da;
-            font-size: 22px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 20px;
+        /* --- NEU: HOME ASSISTANT WIDGET --- */
+        .widget-ha {
+            grid-column: 2 / 4; /* Breiter Bereich für Smart Home */
+            justify-content: flex-start;
+            border-left: 4px solid #03a9f4; /* HA Blau */
         }
 
-        #quest-list {
-            list-style: none; 
-            padding: 0; 
-            font-size: 26px; 
-            text-align: left; 
+        h2 { color: #8b949e; font-size: 20px; text-transform: uppercase; margin-bottom: 20px; width: 100%; text-align: left;}
+
+        #quest-list { list-style: none; padding: 0; font-size: 22px; width: 100%; }
+        #quest-list li { margin-bottom: 15px; display: flex; gap: 10px; }
+
+        .ha-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
             width: 100%;
-            margin: 0;
         }
 
-        #quest-list li {
-            margin-bottom: 18px;
+        .ha-item {
+            background: rgba(255,255,255,0.05);
+            padding: 15px;
+            border-radius: 15px;
+            text-align: left;
             display: flex;
             align-items: center;
             gap: 15px;
-        }
-
-        .completed-text {
-            text-decoration: line-through;
-            color: #57f287;
-            opacity: 0.7;
-        }
-
-        /* --- SYSTEM INFO --- */
-        .widget-system {
-            justify-content: flex-start;
-        }
-
-        .sys-status {
-            font-size: 20px;
-            color: #8b949e;
-            margin-top: 10px;
         }
     </style>
 </head>
@@ -133,119 +92,65 @@
         
         <div class="widget widget-time">
             <div id="time">00:00</div>
-            <div id="date">Lade Datum...</div>
+            <div id="date">Lade...</div>
         </div>
 
         <div class="widget widget-weather">
-            <h2>Hamburg</h2>
+            <h2 style="text-align:center">Wetter</h2>
             <div id="weather-icon">⏳</div>
             <div id="weather-temp">-- °C</div>
         </div>
 
         <div class="widget widget-todo">
             <h2>Daily Quests</h2>
-            <ul id="quest-list">
-                <li>Lade Quests...</li>
-            </ul>
+            <ul id="quest-list"></ul>
         </div>
 
-        <div class="widget widget-system">
-            <h2>System Info</h2>
-            <div class="sys-status">🟢 Pi Zero 2 W</div>
-            <div class="sys-status">📡 Verbunden</div>
-            <div class="sys-status" id="last-update" style="font-size: 16px; margin-top: 30px;">Letztes Update: Jetzt</div>
+        <div class="widget widget-ha">
+            <h2>Smart Home (Home Assistant)</h2>
+            <div class="ha-grid">
+                <div class="ha-item">💡 <span>Wohnzimmer: An</span></div>
+                <div class="ha-item">🌡️ <span>Heizung: 21°C</span></div>
+                <div class="ha-item">🚪 <span>Haustür: Zu</span></div>
+                <div class="ha-item">🔋 <span>Pi Power: OK</span></div>
+            </div>
+            <p style="color:#444; font-size: 12px; margin-top: 20px;">Verbunden mit HA über Lokal-IP</p>
         </div>
 
     </div>
 
     <script>
-        // --- 1. UHRZEIT & DATUM ---
+        // Uhrzeit
         function updateClock() {
             const now = new Date();
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            
-            // Auf dem Dashboard blenden wir die Sekunden oft aus, das wirkt ruhiger
-            document.getElementById('time').innerText = `${hours}:${minutes}`;
-
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            document.getElementById('date').innerText = now.toLocaleDateString('de-DE', options);
-
-            // Auto-Reload um 03:00 Uhr Nachts (RAM bereinigen)
-            if (hours === "03" && minutes === "00" && now.getSeconds() === 0) {
-                window.location.reload();
-            }
+            document.getElementById('time').innerText = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
+            document.getElementById('date').innerText = now.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long' });
         }
         setInterval(updateClock, 1000);
         updateClock();
 
-        // --- 2. WETTER API ---
-        function getWeatherEmoji(code) {
-            if (code === 0) return "☀️"; 
-            if (code >= 1 && code <= 3) return "🌤️"; 
-            if (code >= 45 && code <= 48) return "🌫️"; 
-            if (code >= 51 && code <= 67) return "🌧️"; 
-            if (code >= 71 && code <= 77) return "❄️"; 
-            if (code >= 80 && code <= 82) return "🌦️"; 
-            if (code >= 95 && code <= 99) return "🌩️"; 
-            return "☁️"; 
-        }
-
+        // Wetter (Hamburg)
         async function fetchWeather() {
             try {
-                // Koordinaten für Hamburg (kannst du beliebig anpassen)
-                const lat = 53.55;
-                const lon = 9.99;
-                const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`;
-                
-                const response = await fetch(weatherUrl);
-                const data = await response.json();
-
-                const temp = data.current_weather.temperature;
+                const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=53.55&longitude=9.99&current_weather=true`);
+                const data = await res.json();
+                document.getElementById('weather-temp').innerText = Math.round(data.current_weather.temperature) + " °C";
                 const code = data.current_weather.weathercode;
-
-                document.getElementById('weather-temp').innerText = temp + " °C";
-                document.getElementById('weather-icon').innerText = getWeatherEmoji(code);
-                
-                const now = new Date();
-                document.getElementById('last-update').innerText = `Letztes Update: ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')} Uhr`;
-            } catch (error) {
-                console.error("Wetter konnte nicht geladen werden.");
-            }
+                const emoji = (code === 0) ? "☀️" : (code < 4) ? "🌤️" : (code < 50) ? "🌫️" : "🌧️";
+                document.getElementById('weather-icon').innerText = emoji;
+            } catch (e) {}
         }
-        // Wetter sofort laden und dann jede Stunde (3600000 Millisekunden) aktualisieren
         fetchWeather();
         setInterval(fetchWeather, 3600000);
 
-        // --- 3. DAILY QUESTS LADEN ---
+        // Quests
         function loadQuests() {
-            const questList = document.getElementById('quest-list');
+            const list = document.getElementById('quest-list');
             const tasks = JSON.parse(localStorage.getItem("meineDailies")) || [];
-            
-            questList.innerHTML = "";
-
-            if (tasks.length === 0) {
-                questList.innerHTML = "<li style='color: #888;'>Keine Aufgaben für heute! ☕</li>";
-                return;
-            }
-
-            // Wir zeigen maximal die ersten 5 Quests an, damit das Layout nicht platzt
-            const displayTasks = tasks.slice(0, 5);
-
-            displayTasks.forEach(task => {
-                const li = document.createElement("li");
-                const icon = task.completed ? "✅" : "⬜";
-                const textClass = task.completed ? "completed-text" : "";
-                
-                li.innerHTML = `<span>${icon}</span> <span class="${textClass}">${task.text}</span>`;
-                questList.appendChild(li);
-            });
+            list.innerHTML = tasks.length ? tasks.slice(0, 4).map(t => `<li>${t.completed ? '✅' : '⬜'} ${t.text}</li>`).join('') : "<li>Alles erledigt! ☕</li>";
         }
-        // Quests laden und jede Minute checken, ob sich was geändert hat
         loadQuests();
         setInterval(loadQuests, 60000);
-
     </script>
-
 </body>
 </html>
